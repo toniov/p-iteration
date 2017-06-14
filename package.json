@@ -1,7 +1,7 @@
 {
-  "name": "asyncit",
+  "name": "asyncitt",
   "version": "0.1.0",
-  "description": "Array iteration methods for async/await",
+  "description": "Make array iteration easy with async/await",
   "main": "index.js",
   "scripts": {
     "test": "ava test/index.js"
@@ -10,8 +10,17 @@
     "async/await",
     "async",
     "await",
+    "asynchronous",
+    "awaitable",
+    "async function",
     "array",
-    "iteration"
+    "iteration",
+    "forEach",
+    "map",
+    "every",
+    "some",
+    "filter",
+    "reduce"
   ],
   "author": "Antonio Valverde",
   "license": "ISC",
@@ -23,6 +32,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/antonvs2/asyncit"
+    "url": "https://github.com/antonvs2/asyncitt"
   }
 }
