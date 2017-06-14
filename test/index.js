@@ -2,6 +2,7 @@
 
 const test = require('ava');
 const async = require('../');
+const { asyncForEach } = async.instanceMethods;
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms || 0));
 
@@ -138,4 +139,14 @@ test('reduce without initialValue', async (t) => {
     return accumulator + currentValue;
   });
   t.is(sum, 6);
+});
+
+test('asyncForEach', async (t) => {
+  let total = 0;
+  await asyncForEach.call([2, 1, 3], async (num, index, array) => {
+    await delay(num * 100);
+    t.is(array[index], num);
+    total += num;
+  });
+  t.is(total, 6);
 });
