@@ -1,0 +1,28 @@
+{
+  "name": "asyncit",
+  "version": "0.1.0",
+  "description": "Array iteration methods for async/await",
+  "main": "index.js",
+  "scripts": {
+    "test": "ava test/index.js"
+  },
+  "keywords": [
+    "async/await",
+    "async",
+    "await",
+    "array",
+    "iteration"
+  ],
+  "author": "Antonio Valverde",
+  "license": "ISC",
+  "devDependencies": {
+    "ava": "^0.19.1"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/antonvs2/asyncit"
+  }
+}
