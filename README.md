@@ -19,14 +19,16 @@ $ npm install --save asyncitt
 ```js
 const { map } = require('asyncitt');
 
-// map passing an async function as callback
-const foo = await map([1, 2, 3], async (num) => {
-  const result = await asyncCall();
-  return num * result;
-});
+async function example () => {
+  // map passing an async function as callback
+  const foo = await map([1, 2, 3], async (num) => {
+    const result = await asyncCall();
+    return num * result;
+  });
 
-// map passing a non-async function as callback that returns a Promise
-const bar = await map([1, 2, 3], (num) => asyncCall2(num));
+  // map passing a non-async function as callback that returns a Promise
+  const bar = await map([1, 2, 3], (num) => asyncCall2(num));    
+}
 ```
 
 
@@ -69,7 +71,9 @@ Extending native objects is discouraged and I don't recommend it, but in case yo
 const { instanceMethods } = require('asyncitt');
 Object.assign(Array.prototype, instanceMethods);
 
-const foo = await [1, 2, 3].asyncMap((num) => asyncCall(num));
+async function example () => {
+  const foo = await [1, 2, 3].asyncMap((num) => asyncCall(num));  
+}
 ```
 
 ## License
