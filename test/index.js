@@ -6,7 +6,7 @@ const { asyncForEach } = async.instanceMethods;
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms || 0));
 
-test('forEach is run in parallel', async (t) => {
+test('forEach, check callbacks are run in parallel', async (t) => {
   let total = 0;
   const parallelCheck = [];
   await async.forEach([2, 1, 3], async (num, index, array) => {
@@ -16,6 +16,15 @@ test('forEach is run in parallel', async (t) => {
     total += num;
   });
   t.deepEqual(parallelCheck, [1, 2, 3]);
+  t.is(total, 6);
+});
+
+test('forEach passing a non-async function', async (t) => {
+  let total = 0;
+  await async.forEach([2, 1, 3], (num, index, array) => {
+    t.is(array[index], num);
+    total += num;
+  });
   t.is(total, 6);
 });
 
@@ -31,7 +40,7 @@ test('forEach using thisArg', async (t) => {
   t.is(total, 6);
 });
 
-test('map is run in parallel', async (t) => {
+test('map, check callbacks are run in parallel', async (t) => {
   const parallelCheck = [];
   const arr = await async.map([3, 1, 2], async (num, index, array) => {
     await delay(num * 100);
@@ -43,9 +52,24 @@ test('map is run in parallel', async (t) => {
   t.deepEqual(parallelCheck, [1, 2, 3]);
 });
 
+test('map passing a non-async function that return a promise', async (t) => {
+  const arr = await async.map([1, 2, 3], (num) => Promise.resolve(num * 2));
+  t.deepEqual(arr, [2, 4, 6]);
+});
+
 test('find', async (t) => {
   const foundNum = await async.find([1, 2, 3], async (num, index, array) => {
     await delay();
+    t.is(array[index], num);
+    if (num === 2) {
+      return true;
+    }
+  });
+  t.is(foundNum, 2);
+});
+
+test('find passing a non-async callback', async (t) => {
+  const foundNum = await async.find([1, 2, 3], (num, index, array) => {
     t.is(array[index], num);
     if (num === 2) {
       return true;
@@ -76,6 +100,16 @@ test('some', async (t) => {
   t.true(isIncluded);
 });
 
+test('some passing a non-async callback', async (t) => {
+  const isIncluded = await async.some([1, 2, 3], (num, index, array) => {
+    t.is(array[index], num);
+    if (num === 3) {
+      return true;
+    }
+  });
+  t.true(isIncluded);
+});
+
 test('some (return false)', async (t) => {
   const isIncluded = await async.some([1, 2, 3], async (num, index, array) => {
     await delay();
@@ -98,6 +132,16 @@ test('every', async (t) => {
   t.true(allIncluded);
 });
 
+test('every passing a non-async callback', async (t) => {
+  const allIncluded = await async.every([1, 2, 3], (num, index, array) => {
+    t.is(array[index], num);
+    if (typeof num === 'number') {
+      return true;
+    }
+  });
+  t.true(allIncluded);
+});
+
 test('every (return false)', async (t) => {
   const allIncluded = await async.every([1, 2, '3'], async (num, index, array) => {
     await delay();
@@ -109,7 +153,7 @@ test('every (return false)', async (t) => {
   t.false(allIncluded);
 });
 
-test('filter is run in parallel', async (t) => {
+test('filter, check callbacks are run in parallel', async (t) => {
   const parallelCheck = [];
   const numbers = await async.filter([2, 1, '3'], async (num, index, array) => {
     await delay(num * 100);
