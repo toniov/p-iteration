@@ -40,7 +40,7 @@ test('map is run in parallel', async (t) => {
     return num * 2;
   });
   t.deepEqual(arr, [6, 2, 4]);
-  t.deepEqual(parallelCheck, [1, 2, 3])
+  t.deepEqual(parallelCheck, [1, 2, 3]);
 });
 
 test('find', async (t) => {
@@ -49,7 +49,7 @@ test('find', async (t) => {
     t.is(array[index], num);
     if (num === 2) {
       return true;
-    };
+    }
   });
   t.is(foundNum, 2);
 });
@@ -60,7 +60,7 @@ test('findIndex', async (t) => {
     t.is(array[index], num);
     if (num === 2) {
       return true;
-    };
+    }
   });
   t.is(foundIndex, 1);
 });
@@ -71,7 +71,7 @@ test('some', async (t) => {
     t.is(array[index], num);
     if (num === 3) {
       return true;
-    };
+    }
   });
   t.true(isIncluded);
 });
@@ -82,7 +82,7 @@ test('some (return false)', async (t) => {
     t.is(array[index], num);
     if (num === 4) {
       return true;
-    };
+    }
   });
   t.false(isIncluded);
 });
@@ -93,7 +93,7 @@ test('every', async (t) => {
     t.is(array[index], num);
     if (typeof num === 'number') {
       return true;
-    };
+    }
   });
   t.true(allIncluded);
 });
@@ -104,7 +104,7 @@ test('every (return false)', async (t) => {
     t.is(array[index], num);
     if (typeof num === 'number') {
       return true;
-    };
+    }
   });
   t.false(allIncluded);
 });
@@ -117,7 +117,7 @@ test('filter is run in parallel', async (t) => {
     if (typeof num === 'number') {
       parallelCheck.push(num);
       return true;
-    };
+    }
   });
   t.deepEqual(parallelCheck, [1, 2]);
   t.deepEqual(numbers, [2, 1]);
