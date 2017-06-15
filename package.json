@@ -25,7 +25,9 @@
   "author": "Antonio Valverde",
   "license": "ISC",
   "devDependencies": {
-    "ava": "^0.19.1"
+    "ava": "^0.19.1",
+    "babel-eslint": "^7.2.3",
+    "eslint": "^4.0.0"
   },
   "engines": {
     "node": ">=8.0.0"
