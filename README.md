@@ -8,11 +8,13 @@
 - Callbacks run in parallel
 - Lightweight (no prd dependencies)
 
+
 ## Install
 
 ```
 $ npm install --save asyncitt
 ```
+
 
 ## Usage
 
@@ -75,6 +77,7 @@ async function example () {
   const foo = await [1, 2, 3].asyncMap((num) => asyncCall(num));  
 }
 ```
+
 
 ## License
 
