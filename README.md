@@ -78,4 +78,4 @@ async function example () {
 
 ## License
 
-MIT © [Antonio V](https://github.com/antonvs2)
+MIT © [Antonio V](https://github.com/toniov)
