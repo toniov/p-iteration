@@ -1,9 +1,9 @@
 # asyncitt [![Build Status](https://travis-ci.org/toniov/asyncitt.svg?branch=master)](https://travis-ci.org/toniov/asyncitt)
 
-> Make array iteration easy with async/await
+> Make array iteration easy with async/await and promises
 
-- Same functionality as the ES5 Array iteration methods
-- All the methods return a `Promise`, making them awaitable
+- Same functionality as the ES5 Array iteration methods we all know
+- All the methods return a `Promise`, making them awaitable and thenable
 - Allow the usage of async functions as callback
 - Callbacks run in parallel
 - Lightweight (no prd dependencies)
@@ -18,6 +18,8 @@ $ npm install --save asyncitt
 
 ## Usage
 
+Smooth asynchronous iteration using `async/await`:
+
 ```js
 const { map } = require('asyncitt');
 
@@ -31,6 +33,16 @@ async function example () {
   // map passing a non-async function as callback that returns a Promise
   const bar = await map([1, 2, 3], (num) => asyncCall2(num));    
 }
+```
+
+All methods return a promise so they can just be used outside an async function:
+
+```js
+const { map } = require('asyncitt');
+
+map([1, 2, 3], (num) => asyncCall2(num)).then((foo) => {
+  // ...
+});
 ```
 
 
