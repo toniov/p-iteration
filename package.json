@@ -1,6 +1,6 @@
 {
   "name": "asyncitt",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Make array iteration easy with async/await",
   "main": "index.js",
   "scripts": {
