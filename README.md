@@ -1,4 +1,4 @@
-# asyncitt
+# asyncitt [![Build Status](https://travis-ci.org/toniov/asyncitt.svg?branch=master)](https://travis-ci.org/toniov/asyncitt)
 
 > Make array iteration easy with async/await
 
