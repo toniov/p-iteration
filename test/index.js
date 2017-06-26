@@ -70,6 +70,15 @@ test.cb('forEach used with promises in a non-async function', (t) => {
   });
 });
 
+test('forEach should not execute any callback if array is empty', async (t) => {
+  let count = 0;
+  await forEach([], async () => {
+    await delay();
+    count++;
+  });
+  t.is(count, 0);
+});
+
 test('map, check callbacks are run in parallel', async (t) => {
   const parallelCheck = [];
   const arr = await map([3, 1, 2], async (num, index, array) => {
@@ -104,6 +113,16 @@ test.cb('map used with promises in a non-async function', (t) => {
   });
 });
 
+test('map should return an empty array if passed array is empty', async (t) => {
+  const count = 0;
+  const arr = await map([], async () => {
+    await delay();
+    return 3;
+  });
+  t.deepEqual(arr, []);
+  t.deepEqual(count, 0);
+});
+
 test('find', async (t) => {
   const foundNum = await find([1, 2, 3], async (num, index, array) => {
     await delay();
@@ -117,6 +136,14 @@ test('find', async (t) => {
 
 test('find returns undefined if did not find anything', async (t) => {
   const foundNum = await find([1, 2], async () => {
+    await delay();
+    return false;
+  });
+  t.is(foundNum, undefined);
+});
+
+test('find returns undefined if array is empty', async (t) => {
+  const foundNum = await find([], async () => {
     await delay();
     return false;
   });
@@ -146,6 +173,14 @@ test('findIndex', async (t) => {
 
 test('findIndex returns -1 if did not find anything', async (t) => {
   const notFound = await findIndex([1, 2], async () => {
+    await delay();
+    return false;
+  });
+  t.is(notFound, -1);
+});
+
+test('findIndex returns -1 if array is empty', async (t) => {
+  const notFound = await findIndex([], async () => {
     await delay();
     return false;
   });
@@ -184,6 +219,14 @@ test('some (return false)', async (t) => {
   t.false(isIncluded);
 });
 
+test('some with empty array should return false', async (t) => {
+  const isIncluded = await some([], async () => {
+    await delay();
+    return false;
+  });
+  t.false(isIncluded);
+});
+
 test('every', async (t) => {
   const allIncluded = await every([1, 2, 3], async (num, index, array) => {
     await delay();
@@ -216,6 +259,14 @@ test('every (return false)', async (t) => {
   t.false(allIncluded);
 });
 
+test('every with empty array should return true', async (t) => {
+  const allIncluded = await every([], async () => {
+    await delay();
+    return false;
+  });
+  t.true(allIncluded);
+});
+
 test('filter, check callbacks are run in parallel', async (t) => {
   const parallelCheck = [];
   const numbers = await filter([2, 1, '3'], async (num, index, array) => {
@@ -237,6 +288,17 @@ test('reduce with initialValue', async (t) => {
     return accumulator + currentValue;
   }, 1);
   t.is(sum, 7);
+});
+
+test('filter should return an empty array if passed array is empty', async (t) => {
+  let count = 0;
+  const empty = await filter([], async () => {
+    await delay();
+    count++;
+    return true;
+  });
+  t.deepEqual(count, 0);
+  t.deepEqual(empty, []);
 });
 
 test('reduce without initialValue', async (t) => {
