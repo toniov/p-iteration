@@ -28,6 +28,15 @@ test('forEach passing a non-async function', async (t) => {
   t.is(total, 6);
 });
 
+test('forEach unwraps Promises in the array', async (t) => {
+  let total = 0;
+  await forEach([2, Promise.resolve(1), 3], async (num, index, array) => {
+    t.is(await Promise.resolve(array[index]), num);
+    total += num;
+  });
+  t.is(total, 6);
+});
+
 test('forEach, check this with arrow callback function', async function (t) {
   let total = 0;
   this.test = 'test';
@@ -40,7 +49,7 @@ test('forEach, check this with arrow callback function', async function (t) {
 });
 
 test('forEach, throw inside callback', async function (t) {
-  const err = await t.throws(forEach([2, 1, 3], (num, index, array) => {
+  const err = await t.throws(forEach([2, 1, 3], () => {
     throw new Error('test');
   }));
   t.is(err.message, 'test');
@@ -91,20 +100,29 @@ test('map, check callbacks are run in parallel', async (t) => {
   t.deepEqual(parallelCheck, [1, 2, 3]);
 });
 
+test('map unwraps Promises in the array', async (t) => {
+  const arr = await map([2, Promise.resolve(1), 3], async (num, index, array) => {
+    t.is(await Promise.resolve(array[index]), num);
+    return num * 2;
+  });
+  t.deepEqual(arr, [4, 2, 6]);
+});
+
+
 test('map passing a non-async function that return a promise', async (t) => {
   const arr = await map([1, 2, 3], (num) => Promise.resolve(num * 2));
   t.deepEqual(arr, [2, 4, 6]);
 });
 
 test('map, throw inside callback', async function (t) {
-  const err = await t.throws(map([2, 1, 3], (num, index, array) => {
+  const err = await t.throws(map([2, 1, 3], () => {
     throw new Error('test');
   }));
   t.is(err.message, 'test');
 });
 
 test.cb('map used with promises in a non-async function', (t) => {
-  map([1, 2, 3], async function (num, index, array) {
+  map([1, 2, 3], async function (num) {
     await delay();
     return num * 2;
   }).then((result) => {
@@ -134,6 +152,7 @@ test('find', async (t) => {
   t.is(foundNum, 2);
 });
 
+
 test('find returns undefined if did not find anything', async (t) => {
   const foundNum = await find([1, 2], async () => {
     await delay();
@@ -148,6 +167,17 @@ test('find returns undefined if array is empty', async (t) => {
     return false;
   });
   t.is(foundNum, undefined);
+});
+
+test('find unwraps Promises in the array', async (t) => {
+  const foundNum = await find([1, Promise.resolve(2), 3], async (num, index, array) => {
+    await delay();
+    t.is(await Promise.resolve(array[index]), num);
+    if (num === 2) {
+      return true;
+    }
+  });
+  t.is(foundNum, 2);
 });
 
 test('find passing a non-async callback', async (t) => {
@@ -187,10 +217,32 @@ test('findIndex returns -1 if array is empty', async (t) => {
   t.is(notFound, -1);
 });
 
+test('findIndex unwraps Promises in the array', async (t) => {
+  const foundIndex = await findIndex([Promise.resolve(1), 2, 3], async (num, index, array) => {
+    await delay();
+    t.is(await Promise.resolve(array[index]), num);
+    if (num === 2) {
+      return true;
+    }
+  });
+  t.is(foundIndex, 1);
+});
+
 test('some', async (t) => {
   const isIncluded = await some([1, 2, 3], async (num, index, array) => {
     await delay();
     t.is(array[index], num);
+    if (num === 3) {
+      return true;
+    }
+  });
+  t.true(isIncluded);
+});
+
+test('some unwraps Promises in the array', async (t) => {
+  const isIncluded = await some([1, Promise.resolve(2), 3], async (num, index, array) => {
+    await delay();
+    t.is(await Promise.resolve(array[index]), num);
     if (num === 3) {
       return true;
     }
@@ -231,6 +283,17 @@ test('every', async (t) => {
   const allIncluded = await every([1, 2, 3], async (num, index, array) => {
     await delay();
     t.is(array[index], num);
+    if (typeof num === 'number') {
+      return true;
+    }
+  });
+  t.true(allIncluded);
+});
+
+test('every unwraps Promises in the array', async (t) => {
+  const allIncluded = await every([Promise.resolve(1), 2, 3], async (num, index, array) => {
+    await delay();
+    t.is(await Promise.resolve(array[index]), num);
     if (typeof num === 'number') {
       return true;
     }
@@ -281,6 +344,20 @@ test('filter, check callbacks are run in parallel', async (t) => {
   t.deepEqual(numbers, [2, 1]);
 });
 
+test('filter unwraps Promises in the array', async (t) => {
+  const parallelCheck = [];
+  const numbers = await filter([Promise.resolve(2), 1, '3'], async (num, index, array) => {
+    await delay(num * 100);
+    t.is(await Promise.resolve(array[index]), num);
+    if (typeof num === 'number') {
+      parallelCheck.push(num);
+      return true;
+    }
+  });
+  t.deepEqual(parallelCheck, [1, 2]);
+  t.deepEqual(numbers, [2, 1]);
+});
+
 test('reduce with initialValue', async (t) => {
   const sum = await reduce([1, 2, 3], async (accumulator, currentValue, index, array) => {
     await delay();
@@ -299,6 +376,24 @@ test('filter should return an empty array if passed array is empty', async (t) =
   });
   t.deepEqual(count, 0);
   t.deepEqual(empty, []);
+});
+
+test('reduce unwrap Promises in the array', async (t) => {
+  const sum = await reduce([Promise.resolve(1), 2, 3], async (accumulator, currentValue, index, array) => {
+    await delay();
+    t.is(await Promise.resolve(array[index]), currentValue);
+    return accumulator + currentValue;
+  }, 1);
+  t.is(sum, 7);
+});
+
+test('reduce unwrap Promises in the initialValue', async (t) => {
+  const sum = await reduce([1, 2, 3], async (accumulator, currentValue, index, array) => {
+    await delay();
+    t.is(await Promise.resolve(array[index]), currentValue);
+    return accumulator + currentValue;
+  }, Promise.resolve(1));
+  t.is(sum, 7);
 });
 
 test('reduce without initialValue', async (t) => {

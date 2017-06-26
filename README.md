@@ -57,6 +57,37 @@ map(['Jolyne', 'Joseph', 'Caesar'], (name) => name + getSurname(name)).then((res
 });
 ```
 
+If there is a Promise inside the array, it will be unwrapped before calling the callback:
+
+```js
+const { each, find } = require('p-iteration');
+const { getNameFromID, getUserFromID } = require('nonexistent-module');
+
+async function logNames () {
+  const names = [
+    'Jolyne',
+    getNameFromID(123), // returns a Promise
+    'Caesar'
+  ];
+  await each(names, (name) => {
+    console.log(name);
+  });
+}
+
+// this function is not async, but just returns a promise with the found user
+function findUser (name) {
+  const users = [
+    getUserFromID(123), // returns a Promise
+    { name: 'Jolyne', foo: 'bar' },
+    { name: 'Caesar', foo: 'bar' }
+  ];
+  return find(users, (user) => user.name === name);
+}
+
+// ...
+
+```
+
 
 ## API
 
