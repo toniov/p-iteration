@@ -310,6 +310,49 @@ test('reduce without initialValue', async (t) => {
   t.is(sum, 6);
 });
 
+test('reduce of array with two elements without initialValue', async (t) => {
+  const sum = await reduce([1, 2], async (accumulator, currentValue, index, array) => {
+    await delay();
+    t.is(array[index], currentValue);
+    return accumulator + currentValue;
+  });
+  t.is(sum, 3);
+});
+
+
+test('reduce of empty array without initialValue should throw TypeError', async (t) => {
+  const err = await t.throws(
+    reduce([], async (accumulator, currentValue) => {
+      await delay();
+      return accumulator + currentValue;
+    })
+  );
+  t.is(err.name, 'TypeError');
+  t.is(err.message, 'Reduce of empty array with no initial value');
+});
+
+test('reduce of empty array with initialValue should return initialValue', async (t) => {
+  let count = 0;
+  const sum = await reduce([], async (accumulator, currentValue) => {
+    await delay();
+    count++;
+    return accumulator + currentValue;
+  }, 6);
+  t.is(count, 0);
+  t.is(sum, 6);
+});
+
+test('reduce of array with one element and no initialValue should return that element', async (t) => {
+  let count = 0;
+  const sum = await reduce([6], async (accumulator, currentValue) => {
+    await delay();
+    count++;
+    return accumulator + currentValue;
+  });
+  t.is(count, 0);
+  t.is(sum, 6);
+});
+
 test('asyncForEach', async (t) => {
   let total = 0;
   await asyncForEach.call([2, 1, 3], async (num, index, array) => {
