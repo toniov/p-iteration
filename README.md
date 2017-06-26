@@ -22,16 +22,23 @@ Smooth asynchronous iteration using `async/await`:
 
 ```js
 const { map } = require('p-iteration');
+const getSurname = require('nonexistent-module');
 
-async function example () {
+async function addSurnames () {
   // map passing an async function as callback
-  const foo = await map([1, 2, 3], async (num) => {
-    const result = await asyncCall();
-    return num * result;
+  const completeNames = await map(['Jolyne', 'Joseph', 'Caesar'], async (name) => {
+    const surname = await getSurname(name);
+    return name + surname;
   });
+  // do some stuff
+  return completeNames;
+}
 
+async function getSurnames () {
   // map passing a non-async function as callback that returns a Promise
-  const bar = await map([1, 2, 3], (num) => asyncCall2(num));    
+  const surNames = await map(['Jolyne', 'Joseph', 'Caesar'], (name) => getSurname(name));
+  // do some stuff
+  return surNames; 
 }
 
 // ...
@@ -41,8 +48,9 @@ All methods return a promise so they can just be used outside an async function:
 
 ```js
 const { map } = require('p-iteration');
+const getSurname = require('nonexistent-module');
 
-map([1, 2, 3], (num) => asyncCall2(num)).then((foo) => {
+map(['Jolyne', 'Joseph', 'Caesar'], (name) => name + getSurname(name)).then((result) => {
   // ...
 }).catch((error) => {
   // ...
