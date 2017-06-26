@@ -2,6 +2,7 @@
 
 const test = require('ava');
 const { forEach, map, find, findIndex, some, every, filter, reduce } = require('../');
+const { forEachLimit } = require('../');
 const { asyncForEach } = require('../').instanceMethods;
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms || 0));
@@ -79,6 +80,7 @@ test.cb('forEach used with promises in a non-async function', (t) => {
   });
 });
 
+
 test('forEach should not execute any callback if array is empty', async (t) => {
   let count = 0;
   await forEach([], async () => {
@@ -86,6 +88,19 @@ test('forEach should not execute any callback if array is empty', async (t) => {
     count++;
   });
   t.is(count, 0);
+});
+
+test('forEachLimit works properly', async (t) => {
+  let total = 0;
+  const parallelCheck = [];
+  await forEachLimit([3, 2, 1], 2, async (num, index, array) => {
+    await delay(num * 100);
+    t.is(array[index], num);
+    parallelCheck.push(num);
+    total += num;
+  });
+  t.is(parallelCheck[2], 1);
+  t.is(total, 6);
 });
 
 test('map, check callbacks are run in parallel', async (t) => {
