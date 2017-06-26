@@ -115,6 +115,14 @@ test('find', async (t) => {
   t.is(foundNum, 2);
 });
 
+test('find returns undefined if did not find anything', async (t) => {
+  const foundNum = await find([1, 2], async () => {
+    await delay();
+    return false;
+  });
+  t.is(foundNum, undefined);
+});
+
 test('find passing a non-async callback', async (t) => {
   const foundNum = await find([1, 2, 3], (num, index, array) => {
     t.is(array[index], num);
@@ -134,6 +142,14 @@ test('findIndex', async (t) => {
     }
   });
   t.is(foundIndex, 1);
+});
+
+test('findIndex returns -1 if did not find anything', async (t) => {
+  const notFound = await findIndex([1, 2], async () => {
+    await delay();
+    return false;
+  });
+  t.is(notFound, -1);
 });
 
 test('some', async (t) => {
