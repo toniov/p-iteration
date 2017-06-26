@@ -1,6 +1,6 @@
 {
   "name": "p-iteration",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Make array iteration easy with async/await and promises",
   "main": "index.js",
   "scripts": {
