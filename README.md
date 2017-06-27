@@ -1,7 +1,7 @@
 # p-iteration [![Build Status](https://travis-ci.org/toniov/p-iteration.svg?branch=master)](https://travis-ci.org/toniov/p-iteration) [![NPM version](https://badge.fury.io/js/p-iteration.svg)](http://badge.fury.io/js/p-iteration)
 
 
-> Make array iteration easy with async/await and promises
+> Make array iteration easy when using async/await and promises
 
 - Same functionality as the ES5 Array iteration methods we all know
 - All the methods return a `Promise`, making them awaitable and thenable
