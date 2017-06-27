@@ -2,7 +2,7 @@
 
 const test = require('ava');
 const { forEach, map, find, findIndex, some, every, filter, reduce } = require('../');
-const { forEachLimit } = require('../');
+const { forEachLimit, mapLimit, findLimit } = require('../');
 const { asyncForEach } = require('../').instanceMethods;
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms || 0));
@@ -154,6 +154,18 @@ test('map should return an empty array if passed array is empty', async (t) => {
   });
   t.deepEqual(arr, []);
   t.deepEqual(count, 0);
+});
+
+test('mapLimit works properly', async (t) => {
+  const parallelCheck = [];
+  const arr = await mapLimit([3, 2, 1, 2, 1], 2, async (num, index, array) => {
+    await delay(num * 100);
+    t.is(array[index], num);
+    parallelCheck.push(num);
+    return num * 2;
+  });
+  t.is(parallelCheck[4], 1);
+  t.deepEqual(arr, [6, 4, 2, 4, 2]);
 });
 
 test('find', async (t) => {
