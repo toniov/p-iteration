@@ -1,7 +1,7 @@
 {
   "name": "p-iteration",
   "version": "1.0.1",
-  "description": "Make array iteration easy with async/await and promises",
+  "description": "Make array iteration easy when using async/await and Promises",
   "main": "index.js",
   "scripts": {
     "test": "ava test/index.js",
