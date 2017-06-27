@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "ava test/index.js",
-    "lint": "eslint lib test"
+    "lint": "eslint lib test",
+    "generate-docs": "jsdoc -c .jsdoc.json -R README.md lib/static-methods.js"
   },
   "keywords": [
     "async/await",
@@ -28,7 +29,10 @@
   "devDependencies": {
     "ava": "^0.19.1",
     "babel-eslint": "^7.2.3",
-    "eslint": "^4.0.0"
+    "eslint": "^4.0.0",
+    "jsdoc": "^3.4.3",
+    "jsdoc-strip-async-await": "^0.1.0",
+    "simple-jsdoc": "0.0.4"
   },
   "engines": {
     "node": ">=8.0.0"

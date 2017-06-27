@@ -1,0 +1,15 @@
+{
+  "tags": {
+     "allowUnknownTags": false
+  },
+  "plugins": [
+     "plugins/markdown",
+     "node_modules/jsdoc-strip-async-await"
+  ],
+  "opts": {
+    "encoding": "utf8",
+    "destination": "docs/",
+    "verbose": true,
+    "template": "node_modules/simple-jsdoc"
+  }
+}
