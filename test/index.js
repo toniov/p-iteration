@@ -217,6 +217,18 @@ test('find passing a non-async callback', async (t) => {
   t.is(foundNum, 2);
 });
 
+test('findLimit works properly', async (t) => {
+  let count = 0;
+  const found = await findLimit([3, 2, 1, 2, 1], 3, async (num, index, array) => {
+    count++;
+    await delay(num * 100);
+    t.is(array[index], num);
+    return num === 1;
+  });
+  t.is(count, 3); // limit is 3 so the callback will be executed only three times
+  t.is(found, 1);
+});
+
 test('findIndex', async (t) => {
   const foundIndex = await findIndex([1, 2, 3], async (num, index, array) => {
     await delay();
