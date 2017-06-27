@@ -1,4 +1,5 @@
-# p-iteration [![Build Status](https://travis-ci.org/toniov/p-iteration.svg?branch=master)](https://travis-ci.org/toniov/p-iteration)
+# p-iteration [![Build Status](https://travis-ci.org/toniov/p-iteration.svg?branch=master)](https://travis-ci.org/toniov/p-iteration) [![NPM version](https://badge.fury.io/js/p-iteration.svg)](http://badge.fury.io/js/p-iteration)
+
 
 > Make array iteration easy with async/await and promises
 
