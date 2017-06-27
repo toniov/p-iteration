@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>static-methods.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="scripts/prettify/springeo.js" defer async></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+    <link type="text/css" rel="stylesheet" href="styles/springeo.css">
+    <link type="text/css" rel="stylesheet" href="styles/simple-jsdoc.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><input id="search" type="search" placeholder="Search..."><h3>Global</h3><ul id="global"><li><a href="global.html#every">every</a></li><li><a href="global.html#everySeries">everySeries</a></li><li><a href="global.html#filter">filter</a></li><li><a href="global.html#filterSeries">filterSeries</a></li><li><a href="global.html#find">find</a></li><li><a href="global.html#findIndex">findIndex</a></li><li><a href="global.html#findIndexSeries">findIndexSeries</a></li><li><a href="global.html#findSeries">findSeries</a></li><li><a href="global.html#forEach">forEach</a></li><li><a href="global.html#forEachSeries">forEachSeries</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#mapSeries">mapSeries</a></li><li><a href="global.html#reduce">reduce</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#someSeries">someSeries</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">static-methods.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Implements ES5 [`Array#forEach()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach) method.&lt;br>&lt;br>
+ * Executes the provided callback once for each element.&lt;br>
+ * Callbacks are run concurrently, 
+ * and are only invoked for properties of the array that have been initialized (including those initialized with *undefined*), for unassigned ones `callback` is not run.&lt;br>
+ * @param {Array} array - Array to iterate over.
+ * @param {Function} callback - Function to apply each item in `array`. Accepts three arguments: `currentValue`, `index` and `array`.
+ * @param {Object} [thisArg] - Value to use as *this* when executing the `callback`.
+ * @return {Promise} - Returns a Promise with undefined value.
+ */
+exports.forEach = async (array, callback, thisArg) => {
+  const promiseArray = [];
+  for (let i = 0; i &lt; array.length; i++) {
+    promiseArray.push(callback.call(thisArg || this, await array[i], i, array));
+  }
+  await Promise.all(promiseArray);
+};
+
+/**
+ * Same functionality as [`forEach()`](global.html#forEach), but runs only one callback at a time.
+ * @param {Array} array - Array to iterate over.
+ * @param {Function} callback - Function to apply each item in `array`. Accepts three arguments: `currentValue`, `index` and `array`.
+ * @param {Object} [thisArg] - Value to use as *this* when executing the `callback`.
+ * @return {Promise} - Returns a Promise with undefined value.
+ */
+exports.forEachSeries = async (array, callback, thisArg) => {
+  for (let i = 0; i &lt; array.length; i++) {
+    await callback.call(thisArg || this, await array[i], i, array);
+  }
+};
+
+/**
+ * Implements ES5 [`Array#map()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map) method.&lt;br>&lt;br>
+ * Creates a new array with the results of calling the provided callback once for each element.&lt;br>
+ * Callbacks are run concurrently,
+ * and are only invoked for properties of the array that have been initialized (including those initialized with *undefined*), for unassigned ones`callback` is not run.&lt;br>
+ * Resultant *Array* is always the same *length* as the original one.
+ * @param {Array} array - Array to iterate over.
+ * @param {Function} callback - Function to apply each item in `array`. Accepts three arguments: `currentValue`, `index` and `array`.
+ * @param {Object} [thisArg] - Value to use as *this* when executing the `callback`.
+ * @return {Promise} - Returns a Promise with the resultant *Array* as value.
+ */
+exports.map = async (array, callback, thisArg) => {
+  const promiseArray = [];
+  for (let i = 0; i &lt; array.length; i++) {
+    if (i in array) {
+      promiseArray[i] = callback.call(thisArg || this, await array[i], i, array);
+    }
+  }
+  return Promise.all(promiseArray);
+};
+
+/**
+ * Same functionality as [`map()`](global.html#map), but runs only one callback at a time.
+ * @param {Array} array - Array to iterate over.
+ * @param {Function} callback - Function to apply each item in `array`. Accepts three arguments: `currentValue`, `index` and `array`.
+ * @param {Object} [thisArg] - Value to use as *this* when executing the `callback`.
+ * @return {Promise} - Returns a Promise with the resultant *Array* as value.
+ */
+exports.mapSeries = async (array, callback, thisArg) => {
+  const result = [];
+  for (let i = 0; i &lt; array.length; i++) {
+    if (i in array) {
+      result[i] = await callback.call(thisArg || this, await array[i], i, array);
+    }
+  }
+  return result;
+};
+
+/**
+ * Implements ES5 [`Array#find()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find) method.&lt;br>&lt;br>
+ * Returns the value of the element that satisfies the provided `callback`. The value returned is the one found first.&lt;br>
+ * Callbacks are run concurrently, meaning that all the callbacks are going to run even if the returned value is found in one of the first elements of `array`,
+ * depending on the async calls you are going to use, consider using instead [`findSeries()`](global.html#findSeries).&lt;br>
+ * @param {Array} array - Array to iterate over.
+ * @param {Function} callback - Function to apply each item in `array`. Accepts three arguments: `currentValue`, `index` and `array`.
+ * @param {Object} [thisArg] - Value to use as *this* when executing the `callback`.
+ * @return {Promise} - Returns a Promise with the element that passed the test as value, otherwise *undefined*.
+ */
+exports.find = (array, callback, thisArg) => {
+  return new Promise((resolve, reject) => {
+    if (array.length === 0) {
+      return resolve();
+    }
+    let counter = 1;
+    for (let i = 0; i &lt; array.length; i++) {
+      const check = (found) => {
+        if (found) {
+          resolve(array[i]);
+        } else if (counter === array.length) {
+          resolve();
+        }
+        counter++;
+      };
+      Promise.resolve(array[i])
+        .then((elem) => callback.call(thisArg || this, elem, i, array))
+        .then(check)
+        .catch(reject);
+    }
+  });
+};
+
+/**
+ * Same functionality as [`find()`](global.html#find), but runs only one callback at a time.
+ * @param {Array} array - Array to iterate over.
+ * @param {Function} callback - Function to apply each item in `array`. Accepts three arguments: `currentValue`, `index` and `array`.
+ * @param {Object} [thisArg] - Value to use as *this* when executing the `callback`.
+ * @return {Promise} - Returns a Promise with the element that passed the test as value, otherwise *undefined*.
+ */
+exports.findSeries = async (array, callback, thisArg) => {
+  for (let i = 0; i &lt; array.length; i++) {
+    if (await callback.call(thisArg || this, await array[i], i, array)) {
+      return array[i];
+    }
+  }
+};
+
+/**
+ * Implements ES5 [`Array#findIndex()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex) method.&lt;br>&lt;br>
+ * Returns the index of the element that satisfies the provided `callback`. The index returned is the one found first.&lt;br>
+ * Callbacks are run concurrently, meaning that all the callbacks are going to run even if the returned index is found in one of the first elements of `array`,
+ * depending on the async calls you are going to use, consider using instead [`findSeries()`](global.html#findSeries).&lt;br>
+ * @param {Array} array - Array to iterate over.
+ * @param {Function} callback - Function to apply each item in `array`. Accepts three arguments: `currentValue`, `index` and `array`.
+ * @param {Object} [thisArg] - Value to use as *this* when executing the `callback`.
+ * @return {Promise} - Returns a Promise with the index that passed the test as value, otherwise *-1*.
+ */
+exports.findIndex = (array, callback, thisArg) => {
+  return new Promise((resolve, reject) => {
+    if (array.length === 0) {
+      return resolve(-1);
+    }
+    let counter = 1;
+    for (let i = 0; i &lt; array.length; i++) {
+      const check = (found) => {
+        if (found) {
+          resolve(i);
+        } else if (counter === array.length) {
+          resolve(-1);
+        }
+        counter++;
+      };
+      Promise.resolve(array[i])
+        .then((elem) => callback.call(thisArg || this, elem, i, array))
+        .then(check)
+        .catch(reject);
+    }
+  });
+};
+
+/**
+ * Same functionality as [`findIndex()`](global.html#findIndex), but runs only one callback at a time.
+ * @param {Array} array - Array to iterate over.
+ * @param {Function} callback - Function to apply each item in `array`. Accepts three arguments: `currentValue`, `index` and `array`.
+ * @param {Object} [thisArg] - Value to use as *this* when executing the `callback`.
+ * @return {Promise} - Returns a Promise with the index that passed the test, otherwise *-1*.
+ */
+exports.findIndexSeries = async (array, callback, thisArg) => {
+  for (let i = 0; i &lt; array.length; i++) {
+    if (await callback.call(thisArg || this, await array[i], i, array)) {
+      return i;
+    }
+  }
+};
+
+/**
+ * Implements ES5 [`Array#some()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some) method.&lt;br>&lt;br>
+ * Test if some element in `array` passes the test implemented in `callback`.&lt;br>
+ * Callbacks are run concurrently, meaning that all the callbacks are going to run even if some of the first elements pass the test,
+ * depending on the async calls you are going to use, consider using instead [`someSeries()`](global.html#someSeries).&lt;br>
+ * @param {Array} array - Array to iterate over.
+ * @param {Function} callback - Function to apply each item in `array`. Accepts three arguments: `currentValue`, `index` and `array`.
+ * @param {Object} [thisArg] - Value to use as *this* when executing the `callback`.
+ * @return {Promise} - Returns a Promise with *true* as value if some element passed the test, otherwise *false*.
+ */
+exports.some = (array, callback, thisArg) => {
+  return new Promise((resolve, reject) => {
+    if (array.length === 0) {
+      return resolve(false);
+    }
+    for (let i = 0; i &lt; array.length; i++) {
+      const check = (found) => {
+        if (found) {
+          resolve(true);
+        } else if (i === array.length - 1) {
+          resolve(false);
+        }
+      };
+      Promise.resolve(array[i])
+        .then((elem) => callback.call(thisArg || this, elem, i, array))
+        .then(check)
+        .catch(reject);
+    }
+  });
+};
+
+/**
+ * Same functionality as [`some()`](global.html#some), but runs only one callback at a time.
+ * @param {Array} array - Array to iterate over.
+ * @param {Function} callback - Function to apply each item in `array`. Accepts three arguments: `currentValue`, `index` and `array`.
+ * @param {Object} [thisArg] - Value to use as *this* when executing the `callback`.
+ * @return {Promise} - Returns a Promise with *true* as value if some element passed the test, otherwise *false*.
+ */
+exports.someSeries = async (array, callback, thisArg) => {
+  for (let i = 0; i &lt; array.length; i++) {
+    if (await callback.call(thisArg || this, await array[i], i, array)) {
+      return true;
+    }
+  }
+  return false;
+};
+
+/**
+ * Implements ES5 [`Array#every()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/every) method.&lt;br>&lt;br>
+ * Test if all elements in `array` pass the test implemented in `callback`.&lt;br>
+ * Callbacks are run concurrently, meaning that all the callbacks are going to run even if any of the first elements do not pass the test,
+ * depending on the async calls you are going to use, consider using instead [`everySeries()`](global.html#everySeries).&lt;br>
+ * @param {Array} array - Array to iterate over.
+ * @param {Function} callback - Function to apply each item in `array`. Accepts three arguments: `currentValue`, `index` and `array`.
+ * @param {Object} [thisArg] - Value to use as *this* when executing the `callback`.
+ * @return {Promise} - Returns a Promise with *true* as value if all elements passed the test, otherwise *false*.
+ */
+exports.every = (array, callback, thisArg) => {
+  return new Promise((resolve, reject) => {
+    if (array.length === 0) {
+      return resolve(true);
+    }
+    for (let i = 0; i &lt; array.length; i++) {
+      const check = (found) => {
+        if (!found) {
+          resolve(false);
+        } else if (i === array.length - 1) {
+          resolve(true);
+        }
+      };
+      Promise.resolve(array[i])
+        .then((elem) => callback.call(thisArg || this, elem, i, array))
+        .then(check)
+        .catch(reject);
+    }
+  });
+};
+
+/**
+ * Same functionality as [`every()`](global.html#every), but runs only one callback at a time.&lt;br>&lt;br>
+ * @param {Array} array - Array to iterate over.
+ * @param {Function} callback - Function to apply each item in `array`. Accepts three arguments: `currentValue`, `index` and `array`.
+ * @param {Object} [thisArg] - Value to use as *this* when executing the `callback`.
+ * @return {Promise} - Returns a Promise with *true* as value if all elements passed the test, otherwise *false*.
+ */
+exports.everySeries = async (array, callback, thisArg) => {
+  for (let i = 0; i &lt; array.length; i++) {
+    if (!await callback.call(thisArg || this, await array[i], i, array)) {
+      return false;
+    }
+  }
+  return true;
+};
+
+/**
+ * Implements ES5 [`Array#filter()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) method.&lt;br>&lt;br>
+ * Creates a new array with the elements that passed the test implemented in `callback`.&lt;br>
+ * Callbacks are run concurrently.&lt;br>
+ * @param {Array} array - Array to iterate over.
+ * @param {Function} callback - Function to apply each item in `array`. Accepts three arguments: `currentValue`, `index` and `array`.
+ * @param {Object} [thisArg] - Value to use as *this* when executing the `callback`.
+ * @return {Promise} - Returns a Promise with the resultant filtered *Array* as value.
+ */
+exports.filter = async (array, callback, thisArg) => {
+  /* two loops are necessary in order to do the filtering concurrently
+   * while keeping the order of the elements
+   * (if you find a better way to do it please send a PR!)
+   */ 
+  const promiseArray = [];
+  for (let i = 0; i &lt; array.length; i++) {
+    if (i in array) {
+      promiseArray[i] = callback.call(thisArg || this, await array[i], i, array);
+    }
+  }
+  const filteredArray = [];
+  for (let i = 0; i &lt; promiseArray.length; i++) {
+    if (await promiseArray[i]) {
+      filteredArray.push(await array[i]);
+    }
+  }
+  return filteredArray;
+};
+
+/**
+ * Same functionality as [`filter()`](global.html#filter), but runs only one callback at a time.
+ * @param {Array} array - Array to iterate over.
+ * @param {Function} callback - Function to apply each item in `array`. Accepts three arguments: `currentValue`, `index` and `array`.
+ * @return {Promise} - Returns a Promise with the resultant filtered *Array* as value.
+ */
+exports.filterSeries = async (array, callback, thisArg) => {
+  const result = [];
+  for (let i = 0; i &lt; array.length; i++) {
+    if (i in array) {
+      if (await callback.call(thisArg || this, await array[i], i, array)) {
+        result.push(await array[i]);
+      }
+    }
+  }
+  return result;
+};
+
+/**
+ * Implements ES5 [`Array#reduce()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce) method.&lt;br>&lt;br>
+ * Applies a `callback` against an accumulator and each element in `array`.
+ * @param {Array} array - Array to iterate over.
+ * @param {Function} callback - Function to apply each item in `array`. Accepts four arguments: `accumulator`, `currentValue`, `currentIndex` and `array`.
+ * @param {Object} [initialValue] - Used as first argument to the first call of `callback`.
+ * @return {Promise} - Returns a Promise with the resultant value from the reduction.
+ */
+exports.reduce = async (array, callback, initialValue) => {
+  if (array.length === 0 &amp;&amp; !initialValue) {
+    throw TypeError('Reduce of empty array with no initial value');
+  }
+  let i;
+  let previousValue;
+  if (initialValue) {
+    previousValue = initialValue;
+    i = 0;
+  } else {
+    previousValue = array[0];
+    i = 1;
+  }
+  for (i; i &lt; array.length; i++) {
+    if (i in array) {
+      previousValue = await callback(await previousValue, await array[i], i, array);
+    }
+  }
+  return previousValue;
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<!-- <footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Jun 27 2017 17:16:58 GMT+0900 (JST) using the Minami theme.
+</footer> -->
+
+<script>prettyPrint();</script>
+<!-- <script src="scripts/linenumber.js"></script> -->
+</body>
+</html>

@@ -1,0 +1,31 @@
+.name{
+  color: #38BDFF;
+}
+
+nav ul.methods{
+  display: none;
+}
+
+nav a{
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+nav .ancestor{
+  color: #555;
+  display: inline-block;
+}
+
+
+#search{
+  margin-top: 10px;
+}
+
+@-webkit-keyframes fadeIn{
+  0%{opacity:0};
+  100%{opacity:1};
+}
+@keyframes fadeIn{
+  0%{opacity:0};
+  100%{opacity:1};
+}

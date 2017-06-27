@@ -1,0 +1,13 @@
+.method {
+    margin-bottom: 4rem;
+}
+
+@media only screen and (min-width: 681px) {
+    #main { margin-left: 250px; }
+}
+
+.type-signature {
+    color: #aaa;
+    display: block;
+    font-size: .8rem;
+}
