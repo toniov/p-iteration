@@ -96,35 +96,35 @@ The methods are implementations of the ES5 Array iteration methods we all know w
 
 There is a link to the [original reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) of each method in the docs of this module:
 
-- [`forEach`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/forEach.html)
+- [`forEach`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#forEach)
 
-- [`forEachSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/forEachSeries.html)
+- [`forEachSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#forEachSeries)
 
-- [`map`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/map.html)
+- [`map`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#map)
 
-- [`mapSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/mapSeries.html)
+- [`mapSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#mapSeries)
 
-- [`find`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/find.html)
+- [`find`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#find)
 
-- [`findSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/findSeries.html)
+- [`findSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#findSeries)
 
-- [`findIndex`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/findIndex.html)
+- [`findIndex`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#findIndex)
 
-- [`findIndexSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/findIndexSeries.html)
+- [`findIndexSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#findIndexSeries)
 
-- [`some`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/some.html)
+- [`some`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#some)
 
-- [`someSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/someSeries.html)
+- [`someSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#someSeries)
 
-- [`every`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/every.html)
+- [`every`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#every)
 
-- [`everySeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/everySeries.html)
+- [`everySeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#everySeries)
 
-- [`filter`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/filter.html)
+- [`filter`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#filter)
 
-- [`filterSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/filterSeries.html)
+- [`filterSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#filterSeries)
 
-- [`reduce`(array, callback, [initialValue])](https://toniov.github.io/p-iteration/docs/global/reduce.html)
+- [`reduce`(array, callback, [initialValue])](https://toniov.github.io/p-iteration/global.html#reduce)
 
 
 ## Instance methods
