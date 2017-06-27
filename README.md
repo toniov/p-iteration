@@ -91,33 +91,39 @@ function findUser (name) {
 
 ## API
 
-Check the [JavaScript reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) for details about the API, they use the same syntax, but all return a `Promise`.
+The methods are implementations of the ES5 Array iteration methods we all know with the same syntax, but all return a `Promise`. Also, excepting `reduce`, all methods callbacks are run concurrently. There is a series version of each method, called: `${methodName}Series`, series methods use the same API that their respective concurrent ones.
 
-Excepting `reduce`, all methods callbacks are run concurrently. There is a series version of each method, called: `${methodName}Series`. Series methods use the same API that their respective concurrent ones.
+In the docs, there is a link to each method [reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) with details about the original API.
 
-### forEach(array, callback, [thisArg])
-[docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach)
+- [`forEach`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/forEach.html)
 
-### map(array, callback, [thisArg])
-[docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map)
+- [`forEachSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/forEachSeries.html)
 
-### find(array, callback, [thisArg])
-[docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find)
+- [`map`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/map.html)
 
-### findIndex(array, callback, [thisArg])
-[docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex)
+- [`mapSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/mapSeries.html)
 
-### some(array, callback, [thisArg])
-[docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some)
+- [`find`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/find.html)
 
-### every(array, callback, [thisArg])
-[docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/every)
+- [`findSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/findSeries.html)
 
-### filter(array, callback, [thisArg])
-[docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)
+- [`findIndex`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/findIndex.html)
 
-### reduce(array, callback, [initialValue])
-[docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce)
+- [`findIndexSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/findIndexSeries.html)
+
+- [`some`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/some.html)
+
+- [`someSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/someSeries.html)
+
+- [`every`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/every.html)
+
+- [`everySeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/everySeries.html)
+
+- [`filter`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/filter.html)
+
+- [`filterSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/global/filterSeries.html)
+
+- [`reduce`(array, callback, [initialValue])](https://toniov.github.io/p-iteration/docs/global/reduce.html)
 
 
 ## Instance methods
