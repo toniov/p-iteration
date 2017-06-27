@@ -93,7 +93,7 @@ function findUser (name) {
 
 The methods are implementations of the ES5 Array iteration methods we all know with the same syntax, but all return a `Promise`. Also, excepting `reduce`, all methods callbacks are run concurrently. There is a series version of each method, called: `${methodName}Series`, series methods use the same API that their respective concurrent ones.
 
-In the docs, there is a link to each method [reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) with details about the original API.
+There is a link to the [original reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) of each method in the docs of this module:
 
 - [`forEach`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/docs/forEach.html)
 
