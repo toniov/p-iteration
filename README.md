@@ -45,7 +45,7 @@ async function getSurnames () {
 // ...
 ```
 
-All methods return a promise so they can just be used outside an async function:
+All methods return a Promise so they can just be used outside an async function just with plain Promises:
 
 ```js
 const { map } = require('p-iteration');
@@ -61,8 +61,8 @@ map(['Jolyne', 'Joseph', 'Caesar'], (name) => name + getSurname(name)).then((res
 If there is a Promise inside the array, it will be unwrapped before calling the callback:
 
 ```js
-const { each, find } = require('p-iteration');
-const { getNameFromID, getUserFromID } = require('nonexistent-module');
+const { each } = require('p-iteration');
+const getNameFromID = require('nonexistent-module');
 
 async function logNames () {
   const names = [
@@ -74,8 +74,13 @@ async function logNames () {
     console.log(name);
   });
 }
+```
 
-// this function is not async, but just returns a promise with the found user
+```js
+const { find } = require('p-iteration');
+const getUserFromID = require('nonexistent-module');
+
+// non-async function that just returns a Promise with the found user as value
 function findUser (name) {
   const users = [
     getUserFromID(123), // returns a Promise
@@ -84,11 +89,7 @@ function findUser (name) {
   ];
   return find(users, (user) => user.name === name);
 }
-
-// ...
-
 ```
-
 
 ## API
 
@@ -133,6 +134,8 @@ Extending native objects is discouraged and I don't recommend it, but in case yo
 
 ```js
 const { instanceMethods } = require('p-iteration');
+const asyncCall = require('nonexistent-module');
+
 Object.assign(Array.prototype, instanceMethods);
 
 async function example () {
