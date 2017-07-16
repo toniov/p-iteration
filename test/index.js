@@ -239,6 +239,15 @@ test('some', async (t) => {
   t.true(isIncluded);
 });
 
+test('some should iterate until the end', async (t) => {
+  const isIncluded = await some([500, 200, 400], async (num, index, array) => {
+    await delay(num);
+    t.is(array[index], num);
+    return num === 500;
+  });
+  t.true(isIncluded);
+});
+
 test('some unwraps Promises in the array', async (t) => {
   const isIncluded = await some([1, Promise.resolve(2), 3], async (num, index, array) => {
     await delay();
