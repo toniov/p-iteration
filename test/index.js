@@ -145,9 +145,7 @@ test('find', async (t) => {
   const foundNum = await find([1, 2, 3], async (num, index, array) => {
     await delay();
     t.is(array[index], num);
-    if (num === 2) {
-      return true;
-    }
+    return num === 2;
   });
   t.is(foundNum, 2);
 });
@@ -173,9 +171,7 @@ test('find unwraps Promises in the array', async (t) => {
   const foundNum = await find([1, Promise.resolve(2), 3], async (num, index, array) => {
     await delay();
     t.is(await Promise.resolve(array[index]), num);
-    if (num === 2) {
-      return true;
-    }
+    return num === 2;
   });
   t.is(foundNum, 2);
 });
@@ -183,9 +179,7 @@ test('find unwraps Promises in the array', async (t) => {
 test('find passing a non-async callback', async (t) => {
   const foundNum = await find([1, 2, 3], (num, index, array) => {
     t.is(array[index], num);
-    if (num === 2) {
-      return true;
-    }
+    return num === 2;
   });
   t.is(foundNum, 2);
 });
@@ -194,9 +188,7 @@ test('findIndex', async (t) => {
   const foundIndex = await findIndex([1, 2, 3], async (num, index, array) => {
     await delay();
     t.is(array[index], num);
-    if (num === 2) {
-      return true;
-    }
+    return num === 2;
   });
   t.is(foundIndex, 1);
 });
@@ -221,9 +213,7 @@ test('findIndex unwraps Promises in the array', async (t) => {
   const foundIndex = await findIndex([Promise.resolve(1), 2, 3], async (num, index, array) => {
     await delay();
     t.is(await Promise.resolve(array[index]), num);
-    if (num === 2) {
-      return true;
-    }
+    return num === 2;
   });
   t.is(foundIndex, 1);
 });
@@ -232,9 +222,7 @@ test('some', async (t) => {
   const isIncluded = await some([1, 2, 3], async (num, index, array) => {
     await delay();
     t.is(array[index], num);
-    if (num === 3) {
-      return true;
-    }
+    return num === 3;
   });
   t.true(isIncluded);
 });
@@ -252,9 +240,7 @@ test('some unwraps Promises in the array', async (t) => {
   const isIncluded = await some([1, Promise.resolve(2), 3], async (num, index, array) => {
     await delay();
     t.is(await Promise.resolve(array[index]), num);
-    if (num === 3) {
-      return true;
-    }
+    return num === 3;
   });
   t.true(isIncluded);
 });
@@ -262,9 +248,7 @@ test('some unwraps Promises in the array', async (t) => {
 test('some passing a non-async callback', async (t) => {
   const isIncluded = await some([1, 2, 3], (num, index, array) => {
     t.is(array[index], num);
-    if (num === 3) {
-      return true;
-    }
+    return num === 3;
   });
   t.true(isIncluded);
 });
@@ -273,9 +257,7 @@ test('some (return false)', async (t) => {
   const isIncluded = await some([1, 2, 3], async (num, index, array) => {
     await delay();
     t.is(array[index], num);
-    if (num === 4) {
-      return true;
-    }
+    return num === 4;
   });
   t.false(isIncluded);
 });
@@ -292,9 +274,7 @@ test('every', async (t) => {
   const allIncluded = await every([1, 2, 3], async (num, index, array) => {
     await delay();
     t.is(array[index], num);
-    if (typeof num === 'number') {
-      return true;
-    }
+    return typeof num === 'number';
   });
   t.true(allIncluded);
 });
@@ -303,9 +283,7 @@ test('every unwraps Promises in the array', async (t) => {
   const allIncluded = await every([Promise.resolve(1), 2, 3], async (num, index, array) => {
     await delay();
     t.is(await Promise.resolve(array[index]), num);
-    if (typeof num === 'number') {
-      return true;
-    }
+    return typeof num === 'number';
   });
   t.true(allIncluded);
 });
@@ -313,9 +291,7 @@ test('every unwraps Promises in the array', async (t) => {
 test('every passing a non-async callback', async (t) => {
   const allIncluded = await every([1, 2, 3], (num, index, array) => {
     t.is(array[index], num);
-    if (typeof num === 'number') {
-      return true;
-    }
+    return typeof num === 'number';
   });
   t.true(allIncluded);
 });
@@ -324,9 +300,7 @@ test('every (return false)', async (t) => {
   const allIncluded = await every([1, 2, '3'], async (num, index, array) => {
     await delay();
     t.is(array[index], num);
-    if (typeof num === 'number') {
-      return true;
-    }
+    return typeof num === 'number';
   });
   t.false(allIncluded);
 });
