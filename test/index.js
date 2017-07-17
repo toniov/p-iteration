@@ -4,7 +4,7 @@ const test = require('ava');
 const { forEach, map, find, findIndex, some, every, filter, reduce } = require('../');
 const { asyncForEach } = require('../').instanceMethods;
 
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms || 0));
+const delay = (ms) => new Promise(resolve => setTimeout(() => resolve(ms), ms || 0));
 
 test('forEach, check callbacks are run in parallel', async (t) => {
   let total = 0;
@@ -35,6 +35,14 @@ test('forEach unwraps Promises in the array', async (t) => {
     total += num;
   });
   t.is(total, 6);
+});
+
+test('forEach should execute callbacks as soon as Promises are unwrapped', async (t) => {
+  const parallelCheck = [];
+  await forEach([delay(500), delay(300), delay(400)], (num) => {
+    parallelCheck.push(num);
+  });
+  t.deepEqual(parallelCheck, [300, 400, 500]);
 });
 
 test('forEach, check this with arrow callback function', async function (t) {
@@ -108,6 +116,13 @@ test('map unwraps Promises in the array', async (t) => {
   t.deepEqual(arr, [4, 2, 6]);
 });
 
+test('map should execute callbacks as soon as Promises are unwrapped', async (t) => {
+  const parallelCheck = [];
+  await map([delay(500), delay(300), delay(400)], (num) => {
+    parallelCheck.push(num);
+  });
+  t.deepEqual(parallelCheck, [300, 400, 500]);
+});
 
 test('map passing a non-async function that return a promise', async (t) => {
   const arr = await map([1, 2, 3], (num) => Promise.resolve(num * 2));
@@ -176,6 +191,14 @@ test('find unwraps Promises in the array', async (t) => {
   t.is(foundNum, 2);
 });
 
+test('find should execute callbacks as soon as Promises are unwrapped', async (t) => {
+  const parallelCheck = [];
+  await find([delay(500), delay(300), delay(400)], (num) => {
+    parallelCheck.push(num);
+  });
+  t.deepEqual(parallelCheck, [300, 400, 500]);
+});
+
 test('find passing a non-async callback', async (t) => {
   const foundNum = await find([1, 2, 3], (num, index, array) => {
     t.is(array[index], num);
@@ -218,6 +241,14 @@ test('findIndex unwraps Promises in the array', async (t) => {
   t.is(foundIndex, 1);
 });
 
+test('findIndex should execute callbacks as soon as Promises are unwrapped', async (t) => {
+  const parallelCheck = [];
+  await findIndex([delay(500), delay(300), delay(400)], (num) => {
+    parallelCheck.push(num);
+  });
+  t.deepEqual(parallelCheck, [300, 400, 500]);
+});
+
 test('some', async (t) => {
   const isIncluded = await some([1, 2, 3], async (num, index, array) => {
     await delay();
@@ -243,6 +274,14 @@ test('some unwraps Promises in the array', async (t) => {
     return num === 3;
   });
   t.true(isIncluded);
+});
+
+test('some should execute callbacks as soon as Promises are unwrapped', async (t) => {
+  const parallelCheck = [];
+  await some([delay(500), delay(300), delay(400)], (num) => {
+    parallelCheck.push(num);
+  });
+  t.deepEqual(parallelCheck, [300, 400, 500]);
 });
 
 test('some passing a non-async callback', async (t) => {
@@ -297,6 +336,15 @@ test('every unwraps Promises in the array', async (t) => {
   t.true(allIncluded);
 });
 
+test('every should execute callbacks as soon as Promises are unwrapped', async (t) => {
+  const parallelCheck = [];
+  await every([delay(500), delay(300), delay(400)], (num) => {
+    parallelCheck.push(num);
+    return true;
+  });
+  t.deepEqual(parallelCheck, [300, 400, 500]);
+});
+
 test('every passing a non-async callback', async (t) => {
   const allIncluded = await every([1, 2, 3], (num, index, array) => {
     t.is(array[index], num);
@@ -348,6 +396,14 @@ test('filter unwraps Promises in the array', async (t) => {
   });
   t.deepEqual(parallelCheck, [1, 2]);
   t.deepEqual(numbers, [2, 1]);
+});
+
+test('filter should execute callbacks as soon as Promises are unwrapped', async (t) => {
+  const parallelCheck = [];
+  await filter([delay(500), delay(300), delay(400)], (num) => {
+    parallelCheck.push(num);
+  });
+  t.deepEqual(parallelCheck, [300, 400, 500]);
 });
 
 test('reduce with initialValue', async (t) => {
