@@ -96,6 +96,15 @@ test('forEach should not execute any callback if array is empty', async (t) => {
   t.is(count, 0);
 });
 
+test('forEach should skip holes in arrays', async (t) => {
+  let count = 0;
+  // eslint-disable-next-line no-sparse-arrays
+  await forEach([0, 1, 2, , 5, ,], async () => {
+    count++;
+  });
+  t.is(count, 4);
+});
+
 test('map, check callbacks are run in parallel', async (t) => {
   const parallelCheck = [];
   const arr = await map([3, 1, 2], async (num, index, array) => {
@@ -156,6 +165,15 @@ test('map should return an empty array if passed array is empty', async (t) => {
   t.deepEqual(count, 0);
 });
 
+test('map should skip holes in arrays', async (t) => {
+  let count = 0;
+  // eslint-disable-next-line no-sparse-arrays
+  await map([0, 1, 2, , 5, ,], async () => {
+    count++;
+  });
+  t.is(count, 4);
+});
+
 test('find', async (t) => {
   const foundNum = await find([1, 2, 3], async (num, index, array) => {
     await delay();
@@ -213,6 +231,15 @@ test('find passing a non-async callback', async (t) => {
   t.is(foundNum, 2);
 });
 
+test('find should not skip holes in arrays', async (t) => {
+  let count = 0;
+  // eslint-disable-next-line no-sparse-arrays
+  await find([0, 1, 2, , 5, ,], async () => {
+    count++;
+  });
+  t.is(count, 6);
+});
+
 test('findIndex', async (t) => {
   const foundIndex = await findIndex([1, 2, 3], async (num, index, array) => {
     await delay();
@@ -260,6 +287,15 @@ test('findIndex should execute callbacks as soon as Promises are unwrapped', asy
     parallelCheck.push(num);
   });
   t.deepEqual(parallelCheck, [300, 400, 500]);
+});
+
+test('findIndex should not skip holes in arrays', async (t) => {
+  let count = 0;
+  // eslint-disable-next-line no-sparse-arrays
+  await findIndex([0, 1, 2, , 5, ,], async () => {
+    count++;
+  });
+  t.is(count, 6);
 });
 
 test('some', async (t) => {
@@ -329,6 +365,15 @@ test('some with empty array should return false', async (t) => {
   t.false(isIncluded);
 });
 
+test('some should skip holes in arrays', async (t) => {
+  let count = 0;
+  // eslint-disable-next-line no-sparse-arrays
+  await some([0, 1, 2, , 5, ,], async () => {
+    count++;
+  });
+  t.is(count, 4);
+});
+
 test('every', async (t) => {
   const allIncluded = await every([1, 2, 3], async (num, index, array) => {
     await delay();
@@ -395,6 +440,37 @@ test('every with empty array should return true', async (t) => {
     return false;
   });
   t.true(allIncluded);
+});
+
+test('every should skip holes in arrays', async (t) => {
+  let count = 0;
+  // eslint-disable-next-line no-sparse-arrays
+  const allIncluded = await every([0, 1, 2, , 5, ,], async () => {
+    count++;
+    return true;
+  });
+  t.is(allIncluded, true);
+  t.is(count, 4);
+});
+
+test('filter', async (t) => {
+  const numbers = await filter([2, 1, '3', 4, '5'], async (num) => {
+    await delay(num * 100);
+    return typeof num === 'number';
+  });
+  t.deepEqual(numbers, [2, 1, 4]);
+});
+
+test('filter should skip holes in arrays', async (t) => {
+  let count = 0;
+  // eslint-disable-next-line no-sparse-arrays
+  const numbers = await filter([0, 1, 2, '3', , 5, '6', ,], async (num) => {
+    await delay(num * 100);
+    count++;
+    return typeof num === 'number';
+  });
+  t.is(count, 6);
+  t.deepEqual(numbers, [0, 1, 2, 5]);
 });
 
 test('filter, check callbacks are run in parallel', async (t) => {
