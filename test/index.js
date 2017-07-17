@@ -165,6 +165,12 @@ test('find', async (t) => {
   t.is(foundNum, 2);
 });
 
+test('find, throw inside callback', async function (t) {
+  const err = await t.throws(find([2, 1, 3], () => {
+    throw new Error('test');
+  }));
+  t.is(err.message, 'test');
+});
 
 test('find returns undefined if did not find anything', async (t) => {
   const foundNum = await find([1, 2], async () => {
@@ -216,6 +222,13 @@ test('findIndex', async (t) => {
   t.is(foundIndex, 1);
 });
 
+test('findIndex, throw inside callback', async function (t) {
+  const err = await t.throws(findIndex([2, 1, 3], () => {
+    throw new Error('test');
+  }));
+  t.is(err.message, 'test');
+});
+
 test('findIndex returns -1 if did not find anything', async (t) => {
   const notFound = await findIndex([1, 2], async () => {
     await delay();
@@ -256,6 +269,13 @@ test('some', async (t) => {
     return num === 3;
   });
   t.true(isIncluded);
+});
+
+test('some, throw inside callback', async function (t) {
+  const err = await t.throws(some([2, 1, 3], () => {
+    throw new Error('test');
+  }));
+  t.is(err.message, 'test');
 });
 
 test('some should iterate until the end', async (t) => {
@@ -316,6 +336,13 @@ test('every', async (t) => {
     return typeof num === 'number';
   });
   t.true(allIncluded);
+});
+
+test('every, throw inside callback', async function (t) {
+  const err = await t.throws(every([2, 1, 3], () => {
+    throw new Error('test');
+  }));
+  t.is(err.message, 'test');
 });
 
 test('every should iterate until the end', async (t) => {
@@ -384,6 +411,13 @@ test('filter, check callbacks are run in parallel', async (t) => {
   t.deepEqual(numbers, [2, 1]);
 });
 
+test('filter, throw inside callback', async function (t) {
+  const err = await t.throws(filter([2, 1, 3], () => {
+    throw new Error('test');
+  }));
+  t.is(err.message, 'test');
+});
+
 test('filter unwraps Promises in the array', async (t) => {
   const parallelCheck = [];
   const numbers = await filter([Promise.resolve(2), 1, '3'], async (num, index, array) => {
@@ -424,6 +458,13 @@ test('filter should return an empty array if passed array is empty', async (t) =
   });
   t.deepEqual(count, 0);
   t.deepEqual(empty, []);
+});
+
+test('reduce, throw inside callback', async function (t) {
+  const err = await t.throws(reduce([2, 1, 3], () => {
+    throw new Error('test');
+  }));
+  t.is(err.message, 'test');
 });
 
 test('reduce unwrap Promises in the array', async (t) => {
