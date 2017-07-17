@@ -279,6 +279,15 @@ test('every', async (t) => {
   t.true(allIncluded);
 });
 
+test('every should iterate until the end', async (t) => {
+  const isIncluded = await every([500, 200, 400], async (num, index, array) => {
+    await delay(num);
+    t.is(array[index], num);
+    return true;
+  });
+  t.true(isIncluded);
+});
+
 test('every unwraps Promises in the array', async (t) => {
   const allIncluded = await every([Promise.resolve(1), 2, 3], async (num, index, array) => {
     await delay();
