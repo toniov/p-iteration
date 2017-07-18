@@ -2,6 +2,7 @@
 
 const test = require('ava');
 const { forEach, map, find, findIndex, some, every, filter, reduce } = require('../');
+const { forEachSeries, mapSeries, findSeries, findIndexSeries, someSeries, everySeries, filterSeries } = require('../');
 const { asyncForEach } = require('../').instanceMethods;
 
 const delay = (ms) => new Promise(resolve => setTimeout(() => resolve(ms), ms || 0));
@@ -516,15 +517,6 @@ test('filter should execute callbacks as soon as Promises are unwrapped', async 
   t.deepEqual(parallelCheck, [300, 400, 500]);
 });
 
-test('reduce with initialValue', async (t) => {
-  const sum = await reduce([1, 2, 3], async (accumulator, currentValue, index, array) => {
-    await delay();
-    t.is(array[index], currentValue);
-    return accumulator + currentValue;
-  }, 1);
-  t.is(sum, 7);
-});
-
 test('filter should return an empty array if passed array is empty', async (t) => {
   let count = 0;
   const empty = await filter([], async () => {
@@ -534,6 +526,15 @@ test('filter should return an empty array if passed array is empty', async (t) =
   });
   t.deepEqual(count, 0);
   t.deepEqual(empty, []);
+});
+
+test('reduce with initialValue', async (t) => {
+  const sum = await reduce([1, 2, 3], async (accumulator, currentValue, index, array) => {
+    await delay();
+    t.is(array[index], currentValue);
+    return accumulator + currentValue;
+  }, 1);
+  t.is(sum, 7);
 });
 
 test('reduce, throw inside callback', async function (t) {
@@ -579,7 +580,6 @@ test('reduce of array with two elements without initialValue', async (t) => {
   t.is(sum, 3);
 });
 
-
 test('reduce of empty array without initialValue should throw TypeError', async (t) => {
   const err = await t.throws(
     reduce([], async (accumulator, currentValue) => {
@@ -613,6 +613,19 @@ test('reduce of array with one element and no initialValue should return that el
   t.is(sum, 6);
 });
 
+test('forEachSeries', async (t) => {
+  let total = 0;
+  const seriesCheck = [];
+  await forEachSeries([2, 1, 3], async (num, index, array) => {
+    await delay(num * 100);
+    t.is(array[index], num);
+    seriesCheck.push(num);
+    total += num;
+  });
+  t.deepEqual(seriesCheck, [2, 1, 3]);
+  t.is(total, 6);
+});
+
 test('asyncForEach', async (t) => {
   let total = 0;
   await asyncForEach.call([2, 1, 3], async (num, index, array) => {
@@ -621,4 +634,75 @@ test('asyncForEach', async (t) => {
     total += num;
   });
   t.is(total, 6);
+});
+
+test('mapSeries', async (t) => {
+  const seriesCheck = [];
+  const arr = await mapSeries([3, 1, 2], async (num, index, array) => {
+    await delay(num * 100);
+    t.is(array[index], num);
+    seriesCheck.push(num);
+    return num * 2;
+  });
+  t.deepEqual(arr, [6, 2, 4]);
+  t.deepEqual(seriesCheck, [3, 1, 2]);
+});
+
+test('findSeries', async (t) => {
+  const seriesCheck = [];
+  const foundNum = await findSeries([3, 1, 2], async (num, index, array) => {
+    await delay(num * 100);
+    t.is(array[index], num);
+    seriesCheck.push(num);
+    return num === 2;
+  });
+  t.is(foundNum, 2);
+  t.deepEqual(seriesCheck, [3, 1, 2]);
+});
+
+test('findIndexSeries', async (t) => {
+  const seriesCheck = [];
+  const foundNum = await findIndexSeries([3, 1, 2], async (num, index, array) => {
+    await delay(num * 100);
+    t.is(array[index], num);
+    seriesCheck.push(num);
+    return num === 2;
+  });
+  t.is(foundNum, 2);
+  t.deepEqual(seriesCheck, [3, 1, 2]);
+});
+
+test('someSeries', async (t) => {
+  const seriesCheck = [];
+  const isIncluded = await someSeries([3, 1, 2], async (num, index, array) => {
+    await delay(num * 100);
+    t.is(array[index], num);
+    seriesCheck.push(num);
+    return num === 2;
+  });
+  t.true(isIncluded);
+  t.deepEqual(seriesCheck, [3, 1, 2]);
+});
+
+test('everySeries', async (t) => {
+  const seriesCheck = [];
+  const allIncluded = await everySeries([3, 1, 2], async (num, index, array) => {
+    await delay(num * 100);
+    t.is(array[index], num);
+    seriesCheck.push(num);
+    return typeof num === 'number';
+  });
+  t.true(allIncluded);
+  t.deepEqual(seriesCheck, [3, 1, 2]);
+});
+
+test('filterSeries', async (t) => {
+  const seriesCheck = [];
+  const numbers = await filterSeries([2, 1, '3'], async (num) => {
+    await delay(num * 100);
+    seriesCheck.push(num);
+    return typeof num === 'number';
+  });
+  t.deepEqual(numbers, [2, 1]);
+  t.deepEqual(seriesCheck, [2, 1, '3']);
 });
