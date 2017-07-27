@@ -537,6 +537,29 @@ test('reduce with initialValue', async (t) => {
   t.is(sum, 7);
 });
 
+test('reduce with falsy initialValue', async (t) => {
+  const sum = await reduce(['1', '2', '3'], async (accumulator, currentValue, index, array) => {
+    await delay();
+    t.is(array[index], currentValue);
+    return accumulator + Number(currentValue);
+  }, 0);
+  t.is(sum, 6);
+  
+  const string = await reduce([1, 2, 3], async (accumulator, currentValue, index, array) => {
+    await delay();
+    t.is(array[index], currentValue);
+    return accumulator + String(currentValue);
+  }, '');
+  t.is(string, '123');
+  
+  const somePositive = await reduce([-1, 2, 3], async (accumulator, currentValue, index, array) => {
+    await delay();
+    t.is(array[index], currentValue);
+    return accumulator ? accumulator : currentValue > 0;
+  }, false);
+  t.is(somePositive, true);
+});
+
 test('reduce, throw inside callback', async function (t) {
   const err = await t.throws(reduce([2, 1, 3], () => {
     throw new Error('test');
