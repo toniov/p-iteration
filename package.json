@@ -6,7 +6,9 @@
   "scripts": {
     "test": "ava test/index.js",
     "lint": "eslint lib test",
-    "generate-docs": "jsdoc -c .jsdoc.json -R README.md lib/static-methods.js"
+    "generate-docs": "jsdoc -c .jsdoc.json -R README.md lib/static-methods.js",
+    "update-gh-pages": "git fetch origin gh-pages; git checkout -b docs FETCH_HEAD; git add docs; git commit -m 'Update docs'; git push origin docs:gh-pages; git; checkout master; git branch -D docs",
+    "clean-docs": "rm -rf docs"
   },
   "keywords": [
     "async/await",
