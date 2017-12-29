@@ -37,6 +37,16 @@
   "engines": {
     "node": ">=8.0.0"
   },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": ["es2015", "es2016", "es2017"]
+        }
+      ]
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/toniov/p-iteration"
