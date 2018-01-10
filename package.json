@@ -1,6 +1,6 @@
 {
   "name": "p-iteration",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Make array iteration easy when using async/await and Promises",
   "main": "index.js",
   "scripts": {
@@ -42,7 +42,11 @@
       [
         "babelify",
         {
-          "presets": ["es2015", "es2016", "es2017"]
+          "presets": [
+            "es2015",
+            "es2016",
+            "es2017"
+          ]
         }
       ]
     ]
