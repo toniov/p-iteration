@@ -1,5 +1,5 @@
 {
-  "name": "p-iteration",
+  "name": "p-iteration-with-currency",
   "version": "1.1.7",
   "description": "Make array iteration easy when using async/await and Promises",
   "main": "index.js",
@@ -54,6 +54,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/toniov/p-iteration"
+    "url": "https://github.com/benjd90/p-iteration-with-concurrency"
+  },
+  "dependencies": {
+    "promise-pool-executor": "^1.1.1"
   }
 }

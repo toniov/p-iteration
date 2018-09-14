@@ -1,179 +1,180 @@
 'use strict';
 
 const test = require('ava');
-const { forEach, map, find, findIndex, some, every, filter, reduce } = require('../');
-const { forEachSeries, mapSeries, findSeries, findIndexSeries, someSeries, everySeries, filterSeries } = require('../');
-const { asyncForEach } = require('../').instanceMethods;
-
+const {forEach, map, find, findIndex, some, every, filter, reduce} = require('../');
+const {forEachSeries, mapSeries, findSeries, findIndexSeries, someSeries, everySeries, filterSeries} = require('../');
+const {asyncForEach} = require('../').instanceMethods;
 const delay = (ms) => new Promise(resolve => setTimeout(() => resolve(ms), ms || 0));
 
-test('forEach, check callbacks are run in parallel', async (t) => {
-  let total = 0;
-  const parallelCheck = [];
-  await forEach([2, 1, 3], async (num, index, array) => {
-    await delay(num * 100);
-    t.is(array[index], num);
-    parallelCheck.push(num);
-    total += num;
-  });
-  t.deepEqual(parallelCheck, [1, 2, 3]);
-  t.is(total, 6);
-});
-
-test('forEach passing a non-async function', async (t) => {
-  let total = 0;
-  await forEach([2, 1, 3], (num, index, array) => {
-    t.is(array[index], num);
-    total += num;
-  });
-  t.is(total, 6);
-});
-
-test('forEach unwraps Promises in the array', async (t) => {
-  let total = 0;
-  await forEach([2, Promise.resolve(1), 3], async (num, index, array) => {
-    t.is(await Promise.resolve(array[index]), num);
-    total += num;
-  });
-  t.is(total, 6);
-});
-
-test('forEach should execute callbacks as soon as Promises are unwrapped', async (t) => {
-  const parallelCheck = [];
-  await forEach([delay(500), delay(300), delay(400)], (num) => {
-    parallelCheck.push(num);
-  });
-  t.deepEqual(parallelCheck, [300, 400, 500]);
-});
-
-test('forEach, check this with arrow callback function', async function (t) {
-  let total = 0;
-  this.test = 'test';
-  await forEach([2, 1, 3], (num, index, array) => {
-    t.is(this.test, 'test');
-    t.is(array[index], num);
-    total += num;
-  });
-  t.is(total, 6);
-});
-
-test('forEach, throw inside callback', async function (t) {
-  const err = await t.throws(forEach([2, 1, 3], () => {
-    throw new Error('test');
-  }));
-  t.is(err.message, 'test');
-});
-
-test('forEach using thisArg', async (t) => {
-  let total = 0;
-  const testObj = { test: 1 };
-  await forEach([1, 2, 3], async function (num, index, array) {
-    await delay();
-    t.is(array[index], num);
-    t.deepEqual(this, testObj);
-    total += num;
-  }, testObj);
-  t.is(total, 6);
-});
-
-test.cb('forEach used with promises in a non-async function', (t) => {
-  let total = 0;
-  forEach([1, 2, 3], async function (num, index, array) {
-    await delay();
-    t.is(array[index], num);
-    total += num;
-  }).then(() => {
+for (const concurrency of [undefined, 1, 5, 20]) {
+  test('forEach, check callbacks are run in parallel', async (t) => {
+    let total = 0;
+    const parallelCheck = [];
+    await forEach([2, 1, 3], async (num, index, array) => {
+      await delay(num * 100);
+      t.is(array[index], num);
+      parallelCheck.push(num);
+      total += num;
+    }, null, concurrency);
+    t.deepEqual(parallelCheck, [1, 2, 3]);
     t.is(total, 6);
-    t.end();
   });
-});
 
-test('forEach should not execute any callback if array is empty', async (t) => {
-  let count = 0;
-  await forEach([], async () => {
-    await delay();
-    count++;
+  test('forEach passing a non-async function', async (t) => {
+    let total = 0;
+    await forEach([2, 1, 3], (num, index, array) => {
+      t.is(array[index], num);
+      total += num;
+    }, null, concurrency);
+    t.is(total, 6);
   });
-  t.is(count, 0);
-});
 
-test('forEach should skip holes in arrays', async (t) => {
-  let count = 0;
-  // eslint-disable-next-line no-sparse-arrays
-  await forEach([0, 1, 2, , 5, ,], async () => {
-    count++;
+  test('forEach unwraps Promises in the array', async (t) => {
+    let total = 0;
+    await forEach([2, Promise.resolve(1), 3], async (num, index, array) => {
+      t.is(await Promise.resolve(array[index]), num);
+      total += num;
+    }, null, concurrency);
+    t.is(total, 6);
   });
-  t.is(count, 4);
-});
 
-test('map, check callbacks are run in parallel', async (t) => {
-  const parallelCheck = [];
-  const arr = await map([3, 1, 2], async (num, index, array) => {
-    await delay(num * 100);
-    t.is(array[index], num);
-    parallelCheck.push(num);
-    return num * 2;
+  test('forEach should execute callbacks as soon as Promises are unwrapped', async (t) => {
+    const parallelCheck = [];
+    await forEach([delay(500), delay(300), delay(400)], (num) => {
+      parallelCheck.push(num);
+    }, null, concurrency);
+    t.deepEqual(parallelCheck, [300, 400, 500]);
   });
-  t.deepEqual(arr, [6, 2, 4]);
-  t.deepEqual(parallelCheck, [1, 2, 3]);
-});
 
-test('map unwraps Promises in the array', async (t) => {
-  const arr = await map([2, Promise.resolve(1), 3], async (num, index, array) => {
-    t.is(await Promise.resolve(array[index]), num);
-    return num * 2;
+  test('forEach, check this with arrow callback function', async function (t) {
+    let total = 0;
+    this.test = 'test';
+    await forEach([2, 1, 3], (num, index, array) => {
+      t.is(this.test, 'test');
+      t.is(array[index], num);
+      total += num;
+    }, null, concurrency);
+    t.is(total, 6);
   });
-  t.deepEqual(arr, [4, 2, 6]);
-});
 
-test('map should execute callbacks as soon as Promises are unwrapped', async (t) => {
-  const parallelCheck = [];
-  await map([delay(500), delay(300), delay(400)], (num) => {
-    parallelCheck.push(num);
+  test('forEach, throw inside callback', async function (t) {
+    const err = await t.throws(forEach([2, 1, 3], () => {
+      throw new Error('test');
+    }));
+    t.is(err.message, 'test');
   });
-  t.deepEqual(parallelCheck, [300, 400, 500]);
-});
 
-test('map passing a non-async function that return a promise', async (t) => {
-  const arr = await map([1, 2, 3], (num) => Promise.resolve(num * 2));
-  t.deepEqual(arr, [2, 4, 6]);
-});
-
-test('map, throw inside callback', async function (t) {
-  const err = await t.throws(map([2, 1, 3], () => {
-    throw new Error('test');
-  }));
-  t.is(err.message, 'test');
-});
-
-test.cb('map used with promises in a non-async function', (t) => {
-  map([1, 2, 3], async function (num) {
-    await delay();
-    return num * 2;
-  }).then((result) => {
-    t.deepEqual(result, [2, 4, 6]);
-    t.end();
+  test('forEach using thisArg', async (t) => {
+    let total = 0;
+    const testObj = {test: 1};
+    await forEach([1, 2, 3], async function (num, index, array) {
+      await delay();
+      t.is(array[index], num);
+      t.deepEqual(this, testObj);
+      total += num;
+    }, testObj, concurrency);
+    t.is(total, 6);
   });
-});
 
-test('map should return an empty array if passed array is empty', async (t) => {
-  const count = 0;
-  const arr = await map([], async () => {
-    await delay();
-    return 3;
+  test.cb('forEach used with promises in a non-async function', (t) => {
+    let total = 0;
+    forEach([1, 2, 3], async function (num, index, array) {
+      await delay();
+      t.is(array[index], num);
+      total += num;
+    }, null, concurrency).then(() => {
+      t.is(total, 6);
+      t.end();
+    });
   });
-  t.deepEqual(arr, []);
-  t.deepEqual(count, 0);
-});
 
-test('map should skip holes in arrays', async (t) => {
-  let count = 0;
-  // eslint-disable-next-line no-sparse-arrays
-  await map([0, 1, 2, , 5, ,], async () => {
-    count++;
+  test('forEach should not execute any callback if array is empty', async (t) => {
+    let count = 0;
+    await forEach([], async () => {
+      await delay();
+      count++;
+    }, null, concurrency);
+    t.is(count, 0);
   });
-  t.is(count, 4);
-});
+
+  test('forEach should skip holes in arrays', async (t) => {
+    let count = 0;
+    // eslint-disable-next-line no-sparse-arrays
+    await forEach([0, 1, 2, , 5, ,], async () => {
+      count++;
+    }, null, concurrency);
+    t.is(count, 4);
+  });
+
+  test('map, check callbacks are run in parallel', async (t) => {
+    const parallelCheck = [];
+    const arr = await map([3, 1, 2], async (num, index, array) => {
+      await delay(num * 100);
+      t.is(array[index], num);
+      parallelCheck.push(num);
+      return num * 2;
+    }, null, concurrency);
+    t.deepEqual(arr, [6, 2, 4]);
+    t.deepEqual(parallelCheck, [1, 2, 3]);
+  });
+
+  test('map unwraps Promises in the array', async (t) => {
+    const arr = await map([2, Promise.resolve(1), 3], async (num, index, array) => {
+      t.is(await Promise.resolve(array[index]), num);
+      return num * 2;
+    }, null, concurrency);
+    t.deepEqual(arr, [4, 2, 6]);
+  });
+
+  test('map should execute callbacks as soon as Promises are unwrapped', async (t) => {
+    const parallelCheck = [];
+    await map([delay(500), delay(300), delay(400)], (num) => {
+      parallelCheck.push(num);
+    }, null, concurrency);
+    t.deepEqual(parallelCheck, [300, 400, 500]);
+  });
+
+  test('map passing a non-async function that return a promise', async (t) => {
+    const arr = await map([1, 2, 3], (num) => Promise.resolve(num * 2), null, concurrency);
+    t.deepEqual(arr, [2, 4, 6]);
+  });
+
+  test('map, throw inside callback', async function (t) {
+    const err = await t.throws(map([2, 1, 3], () => {
+      throw new Error('test');
+    }));
+    t.is(err.message, 'test');
+  });
+
+  test.cb('map used with promises in a non-async function', (t) => {
+    map([1, 2, 3], async function (num) {
+      await delay();
+      return num * 2;
+    }, null, concurrency).then((result) => {
+      t.deepEqual(result, [2, 4, 6]);
+      t.end();
+    });
+  });
+
+  test('map should return an empty array if passed array is empty', async (t) => {
+    const count = 0;
+    const arr = await map([], async () => {
+      await delay();
+      return 3;
+    }, null, concurrency);
+    t.deepEqual(arr, []);
+    t.deepEqual(count, 0);
+  });
+
+  test('map should skip holes in arrays', async (t) => {
+    let count = 0;
+    // eslint-disable-next-line no-sparse-arrays
+    await map([0, 1, 2, , 5, ,], async () => {
+      count++;
+    }, null, concurrency);
+    t.is(count, 4);
+  });
+}
 
 test('find', async (t) => {
   const foundNum = await find([1, 2, 3], async (num, index, array) => {
@@ -544,14 +545,14 @@ test('reduce with falsy initialValue', async (t) => {
     return accumulator + Number(currentValue);
   }, 0);
   t.is(sum, 6);
-  
+
   const string = await reduce([1, 2, 3], async (accumulator, currentValue, index, array) => {
     await delay();
     t.is(array[index], currentValue);
     return accumulator + String(currentValue);
   }, '');
   t.is(string, '123');
-  
+
   const somePositive = await reduce([-1, 2, 3], async (accumulator, currentValue, index, array) => {
     await delay();
     t.is(array[index], currentValue);
