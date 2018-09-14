@@ -12,7 +12,8 @@ declare module "p-iteration" {
   export const forEach: <T>(
     array: T[],
     callback: (currentValue: T, index: number, array: T[]) => void,
-    thisArg?: any
+    thisArg?: any,
+    concurrency?: any
   ) => Promise<void>;
 
   /**
@@ -42,7 +43,8 @@ declare module "p-iteration" {
   export const map: <T, U>(
     array: T[],
     callback: (currentValue: T, index: number, array: T[]) => U | Promise<U>,
-    thisArg?: any
+    thisArg?: any,
+    concurrency?: any
   ) => Promise<U[]>;
 
   /**
