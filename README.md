@@ -1,4 +1,4 @@
-# p-iteration [![Build Status](https://travis-ci.org/toniov/p-iteration.svg?branch=master)](https://travis-ci.org/toniov/p-iteration) [![NPM version](https://badge.fury.io/js/p-iteration.svg)](http://badge.fury.io/js/p-iteration)
+# p-iteration-with-concurrency
 
 
 > Make array iteration easy when using async/await and promises
@@ -13,7 +13,7 @@
 ## Install
 
 ```
-$ npm install --save p-iteration
+$ npm install --save p-iteration-with-concurrency
 ```
 
 
@@ -22,7 +22,7 @@ $ npm install --save p-iteration
 Smooth asynchronous iteration using `async/await`:
 
 ```js
-const { map } = require('p-iteration');
+const { map } = require('p-iteration-with-concurrency');
 
 // map passing an async function as callback
 function getUsers (userIds) {
@@ -43,7 +43,7 @@ async function getRawResponses (userIds) {
 ```
 
 ```js
-const { filter } = require('p-iteration');
+const { filter } = require('p-iteration-with-concurrency');
 
 async function getFilteredUsers (userIds, name) {
   const filteredUsers = await filter(userIds, async userId => {
@@ -61,7 +61,7 @@ async function getFilteredUsers (userIds, name) {
 All methods return a Promise so they can just be used outside an async function just with plain Promises:
 
 ```js
-const { map } = require('p-iteration');
+const { map } = require('p-iteration-with-concurrency');
 
 map([123, 125, 156], (userId) => fetch(`/api/users/${userId}`))
   .then((result) => {
@@ -75,7 +75,7 @@ map([123, 125, 156], (userId) => fetch(`/api/users/${userId}`))
 If there is a Promise in the array, it will be unwrapped before calling the callback:
 
 ```js
-const { forEach } = require('p-iteration');
+const { forEach } = require('p-iteration-with-concurrency');
 const fetchJSON = require('nonexistent-module');
 
 function logUsers () {
@@ -91,7 +91,7 @@ function logUsers () {
 ```
 
 ```js
-const { find } = require('p-iteration');
+const { find } = require('p-iteration-with-concurrency');
 const fetchJSON = require('nonexistent-module');
 
 function findUser (name) {
@@ -107,7 +107,7 @@ function findUser (name) {
 The callback will be invoked as soon as the Promise is unwrapped:
 
 ```js
-const { forEach } = require('p-iteration');
+const { forEach } = require('p-iteration-with-concurrency');
 
 // function that returns a Promise resolved after 'ms' passed
 const delay = (ms) => new Promise(resolve => setTimeout(() => resolve(ms), ms));
@@ -125,59 +125,3 @@ async function logNumbers () {
   });
 }
 ```
-
-## API
-
-The methods are implementations of the ES5 Array iteration methods we all know with the same syntax, but all return a `Promise`. Also, with the exception of `reduce()`, all methods callbacks are run concurrently. There is a series version of each method, called: `${methodName}Series`, series methods use the same API that their respective concurrent ones.
-
-There is a link to the [original reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) of each method in the docs of this module:
-
-- [`forEach`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#forEach)
-
-- [`forEachSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#forEachSeries)
-
-- [`map`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#map)
-
-- [`mapSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#mapSeries)
-
-- [`find`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#find)
-
-- [`findSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#findSeries)
-
-- [`findIndex`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#findIndex)
-
-- [`findIndexSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#findIndexSeries)
-
-- [`some`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#some)
-
-- [`someSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#someSeries)
-
-- [`every`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#every)
-
-- [`everySeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#everySeries)
-
-- [`filter`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#filter)
-
-- [`filterSeries`(array, callback, [thisArg])](https://toniov.github.io/p-iteration/global.html#filterSeries)
-
-- [`reduce`(array, callback, [initialValue])](https://toniov.github.io/p-iteration/global.html#reduce)
-
-
-## Instance methods
-
-Extending native objects is discouraged and I don't recommend it, but in case you know what you are doing, you can extend `Array.prototype` to use the above methods as instance methods. They have been renamed as `async${MethodName}`, so the original ones are not overwritten.
-
-```js
-const { instanceMethods } = require('p-iteration');
-
-Object.assign(Array.prototype, instanceMethods);
-
-async function example () {
-  const foo = await [1, 2, 3].asyncMap((id) => fetch(`/api/example/${id}`));
-}
-```
-
-
-## License
-
-MIT © [Antonio V](https://github.com/toniov)
