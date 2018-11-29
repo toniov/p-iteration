@@ -26,7 +26,7 @@
     "reduce"
   ],
   "author": "Antonio Valverde",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "ava": "^0.19.1",
     "babel-eslint": "^7.2.3",
