@@ -28,7 +28,7 @@
   "author": "Antonio Valverde",
   "license": "MIT",
   "devDependencies": {
-    "ava": "^0.19.1",
+    "ava": "^0.25.0",
     "babel-eslint": "^7.2.3",
     "eslint": "^4.0.0",
     "jsdoc": "^3.4.3",
