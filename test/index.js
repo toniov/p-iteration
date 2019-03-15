@@ -46,19 +46,8 @@ test('forEach should execute callbacks as soon as Promises are unwrapped', async
   t.deepEqual(parallelCheck, [300, 400, 500]);
 });
 
-test('forEach, check this with arrow callback function', async function (t) {
-  let total = 0;
-  this.test = 'test';
-  await forEach([2, 1, 3], (num, index, array) => {
-    t.is(this.test, 'test');
-    t.is(array[index], num);
-    total += num;
-  });
-  t.is(total, 6);
-});
-
 test('forEach, throw inside callback', async function (t) {
-  const err = await t.throws(forEach([2, 1, 3], () => {
+  const err = await t.throwsAsync(forEach([2, 1, 3], () => {
     throw new Error('test');
   }));
   t.is(err.message, 'test');
@@ -140,7 +129,7 @@ test('map passing a non-async function that return a promise', async (t) => {
 });
 
 test('map, throw inside callback', async function (t) {
-  const err = await t.throws(map([2, 1, 3], () => {
+  const err = await t.throwsAsync(map([2, 1, 3], () => {
     throw new Error('test');
   }));
   t.is(err.message, 'test');
@@ -185,7 +174,7 @@ test('find', async (t) => {
 });
 
 test('find, throw inside callback', async function (t) {
-  const err = await t.throws(find([2, 1, 3], () => {
+  const err = await t.throwsAsync(find([2, 1, 3], () => {
     throw new Error('test');
   }));
   t.is(err.message, 'test');
@@ -251,7 +240,7 @@ test('findIndex', async (t) => {
 });
 
 test('findIndex, throw inside callback', async function (t) {
-  const err = await t.throws(findIndex([2, 1, 3], () => {
+  const err = await t.throwsAsync(findIndex([2, 1, 3], () => {
     throw new Error('test');
   }));
   t.is(err.message, 'test');
@@ -309,7 +298,7 @@ test('some', async (t) => {
 });
 
 test('some, throw inside callback', async function (t) {
-  const err = await t.throws(some([2, 1, 3], () => {
+  const err = await t.throwsAsync(some([2, 1, 3], () => {
     throw new Error('test');
   }));
   t.is(err.message, 'test');
@@ -385,7 +374,7 @@ test('every', async (t) => {
 });
 
 test('every, throw inside callback', async function (t) {
-  const err = await t.throws(every([2, 1, 3], () => {
+  const err = await t.throwsAsync(every([2, 1, 3], () => {
     throw new Error('test');
   }));
   t.is(err.message, 'test');
@@ -489,7 +478,7 @@ test('filter, check callbacks are run in parallel', async (t) => {
 });
 
 test('filter, throw inside callback', async function (t) {
-  const err = await t.throws(filter([2, 1, 3], () => {
+  const err = await t.throwsAsync(filter([2, 1, 3], () => {
     throw new Error('test');
   }));
   t.is(err.message, 'test');
@@ -544,14 +533,14 @@ test('reduce with falsy initialValue', async (t) => {
     return accumulator + Number(currentValue);
   }, 0);
   t.is(sum, 6);
-  
+
   const string = await reduce([1, 2, 3], async (accumulator, currentValue, index, array) => {
     await delay();
     t.is(array[index], currentValue);
     return accumulator + String(currentValue);
   }, '');
   t.is(string, '123');
-  
+
   const somePositive = await reduce([-1, 2, 3], async (accumulator, currentValue, index, array) => {
     await delay();
     t.is(array[index], currentValue);
@@ -561,7 +550,7 @@ test('reduce with falsy initialValue', async (t) => {
 });
 
 test('reduce, throw inside callback', async function (t) {
-  const err = await t.throws(reduce([2, 1, 3], () => {
+  const err = await t.throwsAsync(reduce([2, 1, 3], () => {
     throw new Error('test');
   }));
   t.is(err.message, 'test');
@@ -604,7 +593,7 @@ test('reduce of array with two elements without initialValue', async (t) => {
 });
 
 test('reduce of empty array without initialValue should throw TypeError', async (t) => {
-  const err = await t.throws(
+  const err = await t.throwsAsync(
     reduce([], async (accumulator, currentValue) => {
       await delay();
       return accumulator + currentValue;
