@@ -11,7 +11,7 @@ declare module "p-iteration" {
    */
   export const forEach: <T>(
     array: T[],
-    callback: (currentValue: T, index: number, array: T[]) => void,
+    callback: (currentValue: T, index: number, array: T[]) => Promise<void>,
     thisArg?: any
   ) => Promise<void>;
 
@@ -24,7 +24,7 @@ declare module "p-iteration" {
    */
   export const forEachSeries: <T>(
     array: T[],
-    callback: (currentValue: T, index: number, array: T[]) => void,
+    callback: (currentValue: T, index: number, array: T[]) => Promise<void>,
     thisArg?: any
   ) => Promise<void>;
 
